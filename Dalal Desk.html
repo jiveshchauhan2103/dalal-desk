@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dalal Desk</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#f1f3f6;--pn:#fff;--ink:#2b2f38;--mut:#7d8594;--ln:#e3e6ec;--hd:#f8f9fb;--blue:#387ed1;--up:#2e9e5b;--dn:#e04b46;--hl:#eaf1fb;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1119;--pn:#151b26;--ink:#d8dde7;--mut:#7f8aa0;--ln:#232c3b;--hd:#121823;--blue:#5b9bf0;--up:#3dbb73;--dn:#f0605b;--hl:#1b2638}}
+:root[data-theme="dark"]{--bg:#0d1119;--pn:#151b26;--ink:#d8dde7;--mut:#7f8aa0;--ln:#232c3b;--hd:#121823;--blue:#5b9bf0;--up:#3dbb73;--dn:#f0605b;--hl:#1b2638}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 13px/1.45 "IBM Plex Sans",system-ui,sans-serif}
+.m{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+.up{color:var(--up)}.dn{color:var(--dn)}.mut{color:var(--mut)}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px 28px;background:var(--pn);border-bottom:1px solid var(--ln);padding:10px 16px}
+.brand{font-weight:600;font-size:15px;margin-right:auto}
+.brand i{font-style:normal;color:var(--blue)}
+.st small{display:block;color:var(--mut);font-size:11px}
+.st b{font:500 13px "IBM Plex Mono",monospace}
+.link{background:none;border:0;color:var(--blue);font:inherit;cursor:pointer;padding:4px}
+.grid{display:grid;grid-template-columns:260px minmax(0,1fr) 250px;gap:1px;background:var(--ln);border-bottom:1px solid var(--ln)}
+.p{background:var(--pn);min-width:0}
+.ph{padding:9px 12px;border-bottom:1px solid var(--ln);background:var(--hd);font-weight:500;color:var(--mut);font-size:12px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px 12px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--ln)}
+th{font-weight:500;color:var(--mut);font-size:12px;background:var(--hd)}
+th:first-child,td:first-child{text-align:left}
+tr.s{cursor:pointer}tr.s:hover{background:var(--hd)}tr.on{background:var(--hl)!important}
+td.sy{font-weight:500}
+td .n{display:block;font-size:11px;color:var(--mut);font-weight:400}
+.ch{display:flex;align-items:baseline;gap:12px;padding:10px 14px;flex-wrap:wrap}
+.ch b{font-size:15px}.ch .px{font-size:20px}
+svg{display:block;width:100%;height:auto}
+.tk{padding:12px}
+.sd{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--ln);border-radius:3px;overflow:hidden;margin-bottom:12px}
+.sd button{border:0;background:var(--hd);color:var(--mut);font:500 13px inherit;font-family:inherit;padding:8px;cursor:pointer}
+.sd button[aria-pressed="true"].b{background:var(--blue);color:#fff}
+.sd button[aria-pressed="true"].s{background:var(--dn);color:#fff}
+label{display:block;color:var(--mut);font-size:11px;margin:10px 0 3px}
+input{width:100%;font:500 14px "IBM Plex Mono",monospace;color:var(--ink);background:var(--pn);border:1px solid var(--ln);border-radius:3px;padding:7px 9px}
+.row{display:flex;justify-content:space-between;padding:5px 0;color:var(--mut)}
+.row b{color:var(--ink);font:500 12px "IBM Plex Mono",monospace}
+.go{width:100%;margin-top:12px;border:0;border-radius:3px;padding:10px;font:600 13px inherit;font-family:inherit;color:#fff;cursor:pointer;background:var(--blue)}
+.go.s{background:var(--dn)}
+.msg{min-height:34px;margin:10px 0 0;font-size:12px;color:var(--mut)}
+.msg.e{color:var(--dn)}.msg.o{color:var(--up)}
+.tabs{display:flex;background:var(--hd);border-bottom:1px solid var(--ln)}
+.tabs button{border:0;background:none;padding:9px 16px;font:500 12px inherit;font-family:inherit;color:var(--mut);cursor:pointer;border-bottom:2px solid transparent}
+.tabs button[aria-selected="true"]{color:var(--blue);border-bottom-color:var(--blue)}
+.sc{overflow-x:auto}
+.em{padding:20px 14px;color:var(--mut)}
+footer{padding:12px 16px;color:var(--mut);font-size:11px}
+button:focus-visible,input:focus-visible,tr:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.brand{width:100%}}
+</style>
+</head>
+<body>
+<div class="bar">
+ <div class="brand">Dalal<i>Desk</i> <span class="mut" style="font-weight:400">Paper trading</span></div>
+ <div class="st"><small>Available cash</small><b id="cash"></b></div>
+ <div class="st"><small>Invested value</small><b id="inv"></b></div>
+ <div class="st"><small>Account value</small><b id="tot"></b></div>
+ <div class="st"><small>Total P&amp;L</small><b id="pnl"></b></div>
+ <button class="link" id="reset">Reset</button>
+</div>
+
+<div class="grid">
+ <div class="p"><div class="ph">Watchlist</div>
+  <table><thead><tr><th>Symbol</th><th>LTP</th><th>Chg %</th></tr></thead><tbody id="wl"></tbody></table></div>
+
+ <div class="p">
+  <div class="ch"><b id="sym"></b><span class="mut" id="nm"></span><span class="px m" id="px"></span><span class="m" id="chg"></span></div>
+  <svg id="chart" viewBox="0 0 720 320" role="img" aria-label="Candlestick chart"></svg>
+ </div>
+
+ <div class="p"><div class="ph">Order</div>
+  <div class="tk">
+   <div class="sd"><button class="b" id="sb" aria-pressed="true">Buy</button><button class="s" id="ss" aria-pressed="false">Sell</button></div>
+   <label for="q">Quantity</label><input id="q" type="number" min="1" step="1" value="10" inputmode="numeric">
+   <label>Order type</label><input value="Market" disabled>
+   <div class="row" style="margin-top:12px"><span>Price</span><b id="op"></b></div>
+   <div class="row"><span>Order value</span><b id="ov"></b></div>
+   <button class="go" id="go"></button>
+   <p class="msg" id="msg" role="status"></p>
+  </div>
+ </div>
+</div>
+
+<div class="p">
+ <div class="tabs" role="tablist"><button role="tab" id="t1" aria-selected="true">Positions</button><button role="tab" id="t2" aria-selected="false">Orders</button></div>
+ <div class="sc" id="tab"></div>
+</div>
+<footer>Simulated prices for practice only. No real money or live market data is used.</footer>
+
+<script>
+const $=id=>document.getElementById(id),START=1e6,N=50,STEPS=6;
+const f=n=>n.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+const inr=n=>'₹'+f(n),sg=n=>(n>=0?'+':'−')+f(Math.abs(n)),cl=n=>n>=0?'up':'dn';
+const base=[['RELIANCE','Reliance Industries',2900],['TCS','Tata Consultancy Services',4100],['INFY','Infosys',1650],['HDFCBANK','HDFC Bank',1700],['ITC','ITC Limited',460],['TATAMOTORS','Tata Motors',980]];
+const step=v=>v*(1+(Math.random()-.5)*.006);
+let S,cash,pos,orders,sel,side,tab,tick;
+function init(){
+ S=base.map(([s,n,p])=>{let v=p,c=[];for(let i=0;i<N-1;i++){const o=v;let h=v,l=v;for(let k=0;k<STEPS;k++){v=step(v);h=Math.max(h,v);l=Math.min(l,v)}c.push({o,h,l,c:v})}c.push({o:v,h:v,l:v,c:v});return{s,n,c,open:c[0].o}});
+ cash=START;pos={};orders=[];sel=0;side='Buy';tab=1;tick=0;
+ say('','');draw();
+}
+const last=s=>s.c[s.c.length-1].c;
+function say(t,k){$('msg').textContent=t;$('msg').className='msg '+k}
+function invested(){return Object.keys(pos).reduce((t,k)=>t+pos[k].q*last(S.find(x=>x.s===k)),0)}
+function draw(){
+ $('wl').innerHTML=S.map((s,i)=>{const p=last(s),c=(p/s.open-1)*100;return `<tr class="s${i===sel?' on':''}" data-i="${i}" tabindex="0"><td class="sy">${s.s}<span class="n">${s.n}</span></td><td class="m">${f(p)}</td><td class="m ${cl(c)}">${sg(c)}%</td></tr>`}).join('');
+ const s=S[sel],p=last(s),c=(p/s.open-1)*100;
+ $('sym').textContent=s.s;$('nm').textContent='NSE';$('px').textContent=f(p);$('chg').textContent=sg(p-s.open)+' ('+sg(c)+'%)';$('chg').className='m '+cl(c);
+ let mn=Math.min(...s.c.map(x=>x.l)),mx=Math.max(...s.c.map(x=>x.h));const pad=(mx-mn)*.08||1;mn-=pad;mx+=pad;
+ const W=720,H=320,R=58,cw=(W-R)/N,y=v=>H-8-((v-mn)/(mx-mn))*(H-16);
+ let g='';for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4;g+=`<line x1="0" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--ln)"/><text x="${W-R+6}" y="${y(v)+4}" font-size="10" fill="var(--mut)" font-family="IBM Plex Mono,monospace">${f(v)}</text>`}
+ const cs=s.c.map((k,i)=>{const x=i*cw+cw/2,col=k.c>=k.o?'var(--up)':'var(--dn)',t=y(Math.max(k.o,k.c)),b=y(Math.min(k.o,k.c));return `<line x1="${x}" x2="${x}" y1="${y(k.h)}" y2="${y(k.l)}" stroke="${col}"/><rect x="${x-cw*.32}" y="${t}" width="${cw*.64}" height="${Math.max(b-t,1)}" fill="${col}"/>`}).join('');
+ const col=p>=s.c[s.c.length-1].o?'var(--up)':'var(--dn)';
+ $('chart').innerHTML=g+cs+`<line x1="0" x2="${W-R}" y1="${y(p)}" y2="${y(p)}" stroke="${col}" stroke-dasharray="3 3"/><rect x="${W-R}" y="${y(p)-8}" width="${R}" height="16" fill="${col}"/><text x="${W-R+4}" y="${y(p)+4}" font-size="10" fill="#fff" font-family="IBM Plex Mono,monospace">${f(p)}</text>`;
+ const q=parseInt($('q').value)||0;$('op').textContent=inr(p);$('ov').textContent=inr(q*p);
+ $('sb').setAttribute('aria-pressed',side==='Buy');$('ss').setAttribute('aria-pressed',side==='Sell');
+ $('go').textContent=side+' '+s.s;$('go').className='go '+(side==='Sell'?'s':'');
+ const iv=invested(),tot=cash+iv,pl=tot-START;
+ $('cash').textContent=inr(cash);$('inv').textContent=inr(iv);$('tot').textContent=inr(tot);$('pnl').textContent=sg(pl);$('pnl').className='m '+cl(pl);
+ $('t1').setAttribute('aria-selected',tab===1);$('t2').setAttribute('aria-selected',tab===2);
+ if(tab===1){const ks=Object.keys(pos);$('tab').innerHTML=ks.length?`<table><thead><tr><th>Instrument</th><th>Qty</th><th>Avg cost</th><th>LTP</th><th>P&amp;L</th></tr></thead><tbody>${ks.map(k=>{const x=S.find(z=>z.s===k),pp=last(x),l=(pp-pos[k].avg)*pos[k].q;return `<tr><td class="sy">${k}</td><td class="m">${pos[k].q}</td><td class="m">${f(pos[k].avg)}</td><td class="m">${f(pp)}</td><td class="m ${cl(l)}">${sg(l)}</td></tr>`}).join('')}</tbody></table>`:'<div class="em">No open positions. Place a buy order from the ticket.</div>'}
+ else $('tab').innerHTML=orders.length?`<table><thead><tr><th>Time</th><th>Type</th><th>Instrument</th><th>Qty</th><th>Price</th><th>Status</th></tr></thead><tbody>${orders.map(o=>`<tr><td class="m">${o.t}</td><td class="${o.sd==='Buy'?'':'dn'}" style="${o.sd==='Buy'?'color:var(--blue)':''}">${o.sd}</td><td class="sy">${o.s}</td><td class="m">${o.q}</td><td class="m">${f(o.p)}</td><td class="up">Executed</td></tr>`).join('')}</tbody></table>`:'<div class="em">No orders placed today.</div>';
+}
+function place(){
+ const q=parseInt($('q').value),s=S[sel],p=last(s);
+ if(!q||q<1)return say('Quantity must be at least 1.','e');
+ if(side==='Buy'){if(q*p>cash)return say('Insufficient funds. Required '+inr(q*p)+', available '+inr(cash)+'.','e');
+  const o=pos[s.s]||{q:0,avg:0};o.avg=(o.avg*o.q+p*q)/(o.q+q);o.q+=q;pos[s.s]=o;cash-=q*p}
+ else{const o=pos[s.s];if(!o||o.q<q)return say('Insufficient holdings. You hold '+(o?o.q:0)+' of '+s.s+'.','e');o.q-=q;cash+=q*p;if(!o.q)delete pos[s.s]}
+ orders.unshift({t:new Date().toLocaleTimeString('en-GB'),sd:side,s:s.s,q,p});
+ say(side+' order executed: '+q+' '+s.s+' @ '+inr(p),'o');draw();
+}
+const pick=e=>{const r=e.target.closest('tr.s');if(r){sel=+r.dataset.i;draw()}};
+$('wl').onclick=pick;$('wl').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(e)}};
+$('sb').onclick=()=>{side='Buy';draw()};$('ss').onclick=()=>{side='Sell';draw()};
+$('t1').onclick=()=>{tab=1;draw()};$('t2').onclick=()=>{tab=2;draw()};
+$('q').oninput=draw;$('go').onclick=place;$('reset').onclick=init;
+setInterval(()=>{tick++;S.forEach(s=>{const k=s.c[s.c.length-1],v=step(k.c);k.c=v;k.h=Math.max(k.h,v);k.l=Math.min(k.l,v);if(tick%STEPS===0){s.c.push({o:v,h:v,l:v,c:v});s.c.shift();s.open=s.c[0].o}});draw()},1000);
+init();
+</script>
+</body>
+</html>
